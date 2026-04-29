@@ -4,7 +4,31 @@ const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
-app.use(cors());
+
+const corsOptions = {
+  origin: [
+    'http://localhost:8081',
+    'http://localhost:19006',
+    'https://driver-pro.polsia.app',
+    /\.vercel\.app$/,
+    /\.netlify\.app$/,
+    /\.railway\.app$/,
+    /\.supabase\.co$/,
+  ],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: [
+    'Content-Type',
+    'Authorization',
+    'apikey',
+    'X-Client-Info',
+    'X-Supabase-Auth'
+  ],
+  credentials: true,
+  optionsSuccessStatus: 200
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 app.use(express.json());
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
